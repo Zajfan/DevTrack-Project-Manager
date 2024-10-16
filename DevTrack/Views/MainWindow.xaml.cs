@@ -1,34 +1,58 @@
 ﻿// MainWindow.xaml.cs
 using DevTrack.BLL;
 using DevTrack.DAL.Models;
-using System.Windows;
+using Microsoft.Maui.Controls;
+using System;
+using System.Collections.ObjectModel;
 
 namespace DevTrack.Views
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : ContentPage
     {
-        private ProjectService projectService;
-        private TaskService taskService; // Add other services as needed
+        private readonly ProjectService _projectService;
+        private readonly TaskService _taskService;
 
-        public MainWindow(ProjectService projectService, TaskService taskService /*, ... other services */)
+        public ObservableCollection<Project> Projects { get; set; } = new();
+        public ObservableCollection<DevTrack.DAL.Models.Task> Tasks { get; set; } = new();
+
+        public MainWindow(ProjectService projectService, TaskService taskService)
         {
             InitializeComponent();
-            this.projectService = projectService;
-            this.taskService = taskService;
-            // ... initialize other services
-            DataContext = this;
+            _projectService = projectService;
+            _taskService = taskService;
+            BindingContext = this;
         }
 
-        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        protected override async void OnAppearing()
         {
-            projectsDataGrid.ItemsSource = await projectService.GetAllProjectsAsync();
-            tasksDataGrid.ItemsSource = await taskService.GetAllTasksAsync();
-            // ... load data for other DataGrids
+            base.OnAppearing();
+            await LoadProjectsAsync();
+            await LoadTasksAsync();
         }
 
-        private async void createProjectButton_Click(object sender, RoutedEventArgs e)
+        private async Task LoadProjectsAsync()
         {
-            // 1. Create a new Project object (potentially get data from input fields)
+            var projects = await _projectService.GetAllProjectsAsync();
+            Projects.Clear();
+            foreach (var project in projects)
+            {
+                Projects.Add(project);
+            }
+        }
+
+        private async Task LoadTasksAsync()
+        {
+            var tasks = await _taskService.GetAllTasksAsync();
+            Tasks.Clear();
+            foreach (var task in tasks)
+            {
+                Tasks.Add(task);
+            }
+        }
+
+        private async void createProjectButton_Click(object sender, EventArgs e)
+        {
+            // 1. Create a new Project object (get data from input fields)
             var newProject = new Project
             {
                 ProjectName = "New Project",
@@ -38,22 +62,23 @@ namespace DevTrack.Views
 
             try
             {
-                await projectService.CreateProjectAsync(newProject);
-                projectsDataGrid.ItemsSource = await projectService.GetAllProjectsAsync();
+                await _projectService.CreateProjectAsync(newProject);
+                await LoadProjectsAsync(); // Refresh the project list
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error creating project: {ex.Message}");
+                // Display an error message to the user
+                await DisplayAlert("Error", $"Error creating project: {ex.Message}", "OK");
             }
         }
 
-        private async void updateProjectButton_Click(object sender, RoutedEventArgs e)
+        private async void updateProjectButton_Click(object sender, EventArgs e)
         {
-            // 1. Get the selected project from the DataGrid
-            var selectedProject = projectsDataGrid.SelectedItem as Project;
+            // 1. Get the selected project (implementation depends on your UI)
+            var selectedProject = projectsDataGrid.SelectedItem as Project; // Assuming you have a DataGrid
             if (selectedProject == null)
             {
-                MessageBox.Show("Please select a project to update.");
+                await DisplayAlert("Error", "Please select a project to update.", "OK");
                 return;
             }
 
@@ -61,22 +86,22 @@ namespace DevTrack.Views
 
             try
             {
-                await projectService.UpdateProjectAsync(selectedProject);
-                projectsDataGrid.ItemsSource = await projectService.GetAllProjectsAsync();
+                await _projectService.UpdateProjectAsync(selectedProject);
+                await LoadProjectsAsync(); // Refresh the project list
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error updating project: {ex.Message}");
+                await DisplayAlert("Error", $"Error updating project: {ex.Message}", "OK");
             }
         }
 
-        private async void deleteProjectButton_Click(object sender, RoutedEventArgs e)
+        private async void deleteProjectButton_Click(object sender, EventArgs e)
         {
-            // 1. Get the selected project from the DataGrid
-            var selectedProject = projectsDataGrid.SelectedItem as Project;
+            // 1. Get the selected project (implementation depends on your UI)
+            var selectedProject = projectsDataGrid.SelectedItem as Project; // Assuming you have a DataGrid
             if (selectedProject == null)
             {
-                MessageBox.Show("Please select a project to delete.");
+                await DisplayAlert("Error", "Please select a project to delete.", "OK");
                 return;
             }
 
@@ -84,12 +109,12 @@ namespace DevTrack.Views
 
             try
             {
-                await projectService.DeleteProjectAsync(selectedProject.ProjectID);
-                projectsDataGrid.ItemsSource = await projectService.GetAllProjectsAsync();
+                await _projectService.DeleteProjectAsync(selectedProject.ProjectID);
+                await LoadProjectsAsync(); // Refresh the project list
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error deleting project: {ex.Message}");
+                await DisplayAlert("Error", $"Error deleting project: {ex.Message}", "OK");
             }
         }
 
