@@ -1,5 +1,5 @@
-// Startup.cs
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddSignalR();
-}
+//// Startup.cs
+//public void ConfigureServices(IServiceCollection services)
+//{
+//    services.AddSignalR();
+//} 
