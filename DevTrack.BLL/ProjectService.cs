@@ -1,17 +1,15 @@
-﻿// ProjectService.cs
-using DevTrack.DAL.Models;
+﻿using DevTrack.DAL.Models;
 using DevTrack.DAL.Repositories;
-using System;
-using System.Collections.Generic;
+using SystemTask = System.Threading.Tasks.Task; // Alias for System.Threading.Tasks.Task
 
 namespace DevTrack.BLL
 {
     public class ProjectService
     {
-        private readonly ProjectRepository _projectRepository;
-        private readonly TaskRepository _taskRepository;
-        private readonly MilestoneRepository _milestoneRepository;
-        private readonly DocumentRepository _documentRepository;
+        private readonly ProjectRepository projectRepository;
+        private readonly TaskRepository taskRepository;
+        private readonly MilestoneRepository milestoneRepository;
+        private readonly DocumentRepository documentRepository;
 
         public ProjectService(
             ProjectRepository projectRepository,
@@ -19,43 +17,43 @@ namespace DevTrack.BLL
             MilestoneRepository milestoneRepository,
             DocumentRepository documentRepository)
         {
-            _projectRepository = projectRepository;
-            _taskRepository = taskRepository;
-            _milestoneRepository = milestoneRepository;
-            _documentRepository = documentRepository;
+            this.projectRepository = projectRepository;
+            this.taskRepository = taskRepository;
+            this.milestoneRepository = milestoneRepository;
+            this.documentRepository = documentRepository;
         }
 
-        public TaskRepository Get_taskRepository()
+        public DocumentRepository GetDocumentRepository()
         {
-            return _taskRepository;
+            return documentRepository;
         }
 
-        public async System.Threading.Tasks.Task<ProjectDashboardData> GetProjectDashboardDataAsync(int projectId)
+        public async SystemTask<ProjectDashboardData> GetProjectDashboardDataAsync(int projectId, DocumentRepository documentRepository)
         {
-            var project = await _projectRepository.GetProjectByIdAsync(projectId);
-            var tasks = await _taskRepository.GetTasksByProjectIdAsync(projectId);
-            var milestones = await _milestoneRepository.GetAllMilestonesAsync();
-            var documents = await _documentRepository.GetAllDocumentsAsync();
+            var project = await projectRepository.GetProjectByIdAsync(projectId);
+            var tasks = await taskRepository.GetTasksByProjectIdAsync(projectId);
+            var milestones = await milestoneRepository.GetAllMilestonesAsync();
+            var documents = await documentRepository.GetAllDocumentsAsync();
 
             return new ProjectDashboardData
             {
                 Project = project,
                 Tasks = tasks,
                 Milestones = milestones,
-                Documents = documents
+                Documents = documents.Cast<DAL.Models.Document>().ToList()
             };
         }
 
-        public async System.Threading.Tasks.Task<List<Project>> GetAllProjectsAsync()
+        public async SystemTask<List<Project>> GetAllProjectsAsync()
         {
-            return await _projectRepository.GetAllProjectsAsync();
+            return await projectRepository.GetAllProjectsAsync();
         }
 
-        public async System.Threading.Tasks.Task CreateProjectAsync(Project project)
+        public async SystemTask CreateProjectAsync(Project project)
         {
             if (IsProjectNameUnique(project.ProjectName))
             {
-                await _projectRepository.CreateProjectAsync(project);
+                await projectRepository.CreateProjectAsync(project);
             }
             else
             {
@@ -63,17 +61,16 @@ namespace DevTrack.BLL
             }
         }
 
-        public async System.Threading.Tasks.Task UpdateProjectAsync(Project project)
+        public async SystemTask UpdateProjectAsync(Project project)
         {
             try
             {
-                var existingProject = await _projectRepository.GetProjectByIdAsync(project.ProjectID);
+                var existingProject = await projectRepository.GetProjectByIdAsync(project.ProjectID);
                 if (existingProject == null)
                 {
                     throw new Exception("Project not found.");
                 }
-
-                await _projectRepository.UpdateProjectAsync(project);
+                await projectRepository.UpdateProjectAsync(project);
             }
             catch (Exception ex)
             {
@@ -82,17 +79,16 @@ namespace DevTrack.BLL
             }
         }
 
-        public async System.Threading.Tasks.Task DeleteProjectAsync(int projectId)
+        public async SystemTask DeleteProjectAsync(int projectId)
         {
             try
             {
-                var existingProject = await _projectRepository.GetProjectByIdAsync(projectId);
+                var existingProject = await projectRepository.GetProjectByIdAsync(projectId);
                 if (existingProject == null)
                 {
                     throw new Exception("Project not found.");
                 }
-
-                await _projectRepository.DeleteProjectAsync(projectId);
+                await projectRepository.DeleteProjectAsync(projectId);
             }
             catch (Exception ex)
             {
