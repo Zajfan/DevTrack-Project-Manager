@@ -1,9 +1,6 @@
 ﻿// ProjectService.cs
 using DevTrack.DAL.Models;
 using DevTrack.DAL.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace DevTrack.BLL
 {
