@@ -1,4 +1,4 @@
-﻿// ProjectService.cs (in DevTrack.BLL)
+﻿// ProjectService.cs
 using DevTrack.DAL.Models;
 using DevTrack.DAL.Repositories;
 using System;
