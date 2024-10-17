@@ -1,44 +1,39 @@
 ﻿// ProjectService.cs
 using DevTrack.DAL.Models;
 using DevTrack.DAL.Repositories;
-using Task = DevTrack.DAL.Models.Task;
 
 namespace DevTrack.BLL
 {
     public class ProjectService
     {
-        private readonly ProjectRepository projectRepository;
-        private readonly TaskRepository taskRepository;
-        private readonly MilestoneRepository milestoneRepository;
-        private readonly DocumentRepository documentRepository;
-        // ... add other repositories as needed
+        private readonly ProjectRepository _projectRepository;
+        private readonly TaskRepository _taskRepository;
+        private readonly MilestoneRepository _milestoneRepository;
+        private readonly DocumentRepository _documentRepository;
 
         public ProjectService(
             ProjectRepository projectRepository,
             TaskRepository taskRepository,
             MilestoneRepository milestoneRepository,
-            DocumentRepository documentRepository
-            /*, ... other repositories */)
+            DocumentRepository documentRepository)
         {
-            this.projectRepository = projectRepository;
-            this.taskRepository = taskRepository;
-            this.milestoneRepository = milestoneRepository;
-            this.documentRepository = documentRepository;
-            // ... initialize other repositories
+            _projectRepository = projectRepository;
+            _taskRepository = taskRepository;
+            _milestoneRepository = milestoneRepository;
+            _documentRepository = documentRepository;
         }
 
-        public TaskRepository GetTaskRepository()
+        public TaskRepository Get_taskRepository()
         {
-            return taskRepository;
+            return _taskRepository;
         }
 
-        public async Task<ProjectDashboardData> GetProjectDashboardDataAsync(int projectId, TaskRepository taskRepository)
+        public async System.Threading.Tasks.Task<ProjectDashboardData> GetProjectDashboardDataAsync(int projectId)
         {
-            var project = await projectRepository.GetProjectByIdAsync(projectId);
-            var tasks = await taskRepository.GetTasksByProjectIdAsync(projectId);
-            var milestones = await milestoneRepository.GetAllMilestonesAsync(); // Assuming you want all milestones
-            var documents = await documentRepository.GetAllDocumentsAsync(); // Assuming you want all documents
-            // ... get other relevant data
+            var project = await _projectRepository.GetProjectByIdAsync(projectId);
+            var tasks = await _taskRepository.GetTasksByProjectIdAsync(projectId);
+            var milestones = await _milestoneRepository.GetAllMilestonesAsync();
+            var documents = await _documentRepository.GetAllDocumentsAsync();
 
             return new ProjectDashboardData
             {
@@ -46,82 +41,66 @@ namespace DevTrack.BLL
                 Tasks = tasks,
                 Milestones = milestones,
                 Documents = documents
-                // ... other data
             };
         }
 
-        public async Task<List<Project>> GetAllProjectsAsync()
+        public async System.Threading.Tasks.Task<List<Project>> GetAllProjectsAsync()
         {
-            return await projectRepository.GetAllProjectsAsync();
+            return await _projectRepository.GetAllProjectsAsync();
         }
 
-        public async Task CreateProjectAsync(Project project)
+        public async System.Threading.Tasks.Task CreateProjectAsync(Project project)
         {
-            // 1. Perform validation on the project data (e.g., check if the project name is unique)
             if (IsProjectNameUnique(project.ProjectName))
             {
-                // 2. If valid, call the repository method to create the project
-                await projectRepository.CreateProjectAsync(project);
+                await _projectRepository.CreateProjectAsync(project);
             }
             else
             {
-                // Handle validation error (e.g., throw an exception or return an error message)
                 throw new Exception("Project name already exists.");
             }
         }
 
-        public async Task UpdateProjectAsync(Project project)
+        public async System.Threading.Tasks.Task UpdateProjectAsync(Project project)
         {
             try
             {
-                // 1. Perform validation (e.g., check if the project exists, validate properties)
-                var existingProject = await projectRepository.GetProjectByIdAsync(project.ProjectID);
+                var existingProject = await _projectRepository.GetProjectByIdAsync(project.ProjectID);
                 if (existingProject == null)
                 {
                     throw new Exception("Project not found.");
                 }
 
-                // (Add more validation if needed) ...
-
-                // 2. If valid, call the repository to update
-                await projectRepository.UpdateProjectAsync(project);
+                await _projectRepository.UpdateProjectAsync(project);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error updating project: {ex.Message}");
-                throw; // Or handle the exception appropriately
+                throw;
             }
         }
 
-        public async Task DeleteProjectAsync(int projectId)
+        public async System.Threading.Tasks.Task DeleteProjectAsync(int projectId)
         {
             try
             {
-                // 1. (Optional) Perform checks (e.g., if the project exists, if it has associated tasks, etc.)
-                var existingProject = await projectRepository.GetProjectByIdAsync(projectId);
+                var existingProject = await _projectRepository.GetProjectByIdAsync(projectId);
                 if (existingProject == null)
                 {
                     throw new Exception("Project not found.");
                 }
 
-                // (Add more checks if needed) ...
-
-                // 2. Call the repository to delete
-                await projectRepository.DeleteProjectAsync(projectId);
+                await _projectRepository.DeleteProjectAsync(projectId);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error deleting project: {ex.Message}");
-                throw; // Or handle the exception appropriately
+                throw;
             }
         }
 
-        // ... (Add other methods for project management) ...
-
-        // Example validation method (replace with your actual validation logic)
         private bool IsProjectNameUnique(string projectName)
         {
-            // Check if a project with the given name already exists in the database
             // ... (Your implementation to check for uniqueness) ...
             return true; // Or false if the name is not unique
         }

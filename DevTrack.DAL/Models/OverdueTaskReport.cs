@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DevTrack.DAL.Models
+﻿namespace DevTrack.DAL.Models
 {
     public class OverdueTaskReport
     {

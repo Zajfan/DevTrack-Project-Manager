@@ -1,6 +1,4 @@
 ﻿// App.xaml.cs
-using System.Windows;
-
 namespace DevTrack
 {
     /// <summary>
