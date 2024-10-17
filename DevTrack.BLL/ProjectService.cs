@@ -3,8 +3,6 @@ using DevTrack.DAL.Models;
 using DevTrack.DAL.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using SystemTask = System.Threading.Tasks.Task; // Alias for System.Threading.Tasks.Task
 
 namespace DevTrack.BLL
 {
@@ -32,9 +30,8 @@ namespace DevTrack.BLL
             return documentRepository;
         }
 
-        public async SystemTask<ProjectDashboardData> GetProjectDashboardDataAsync(int projectId)
+        public async System.Threading.Tasks.Task<ProjectDashboardData> GetProjectDashboardDataAsync(int projectId)
         {
-            var project = await projectRepository.GetProjectByIdAsync(projectId);
             var tasks = await taskRepository.GetTasksByProjectIdAsync(projectId);
             var milestones = await milestoneRepository.GetAllMilestonesAsync();
             var documents = await documentRepository.GetAllDocumentsAsync();
@@ -48,12 +45,12 @@ namespace DevTrack.BLL
             };
         }
 
-        public async SystemTask<List<Project>> GetAllProjectsAsync()
+        public async System.Threading.Tasks.Task<List<Project>> GetAllProjectsAsync()
         {
             return await projectRepository.GetAllProjectsAsync();
         }
 
-        public async SystemTask CreateProjectAsync(Project project)
+        public async System.Threading.Tasks.Task CreateProjectAsync(Project project)
         {
             if (IsProjectNameUnique(project.ProjectName))
             {
@@ -65,7 +62,7 @@ namespace DevTrack.BLL
             }
         }
 
-        public async SystemTask UpdateProjectAsync(Project project)
+        public async System.Threading.Tasks.Task UpdateProjectAsync(Project project)
         {
             try
             {
@@ -83,7 +80,7 @@ namespace DevTrack.BLL
             }
         }
 
-        public async SystemTask DeleteProjectAsync(int projectId)
+        public async System.Threading.Tasks.Task DeleteProjectAsync(int projectId)
         {
             try
             {
@@ -107,3 +104,4 @@ namespace DevTrack.BLL
             return true; // Or false if the name is not unique
         }
     }
+}
