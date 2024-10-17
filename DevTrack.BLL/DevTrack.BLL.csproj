@@ -23,4 +23,8 @@
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\DevTrack.DAL\DevTrack.DAL.csproj" />
+	</ItemGroup>
+
 </Project>

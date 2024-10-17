@@ -1,5 +1,9 @@
-﻿using DevTrack.DAL.Models;
+﻿// ProjectService.cs
+using DevTrack.DAL.Models;
 using DevTrack.DAL.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using SystemTask = System.Threading.Tasks.Task; // Alias for System.Threading.Tasks.Task
 
 namespace DevTrack.BLL
@@ -28,7 +32,7 @@ namespace DevTrack.BLL
             return documentRepository;
         }
 
-        public async SystemTask<ProjectDashboardData> GetProjectDashboardDataAsync(int projectId, DocumentRepository documentRepository)
+        public async SystemTask<ProjectDashboardData> GetProjectDashboardDataAsync(int projectId)
         {
             var project = await projectRepository.GetProjectByIdAsync(projectId);
             var tasks = await taskRepository.GetTasksByProjectIdAsync(projectId);
@@ -38,9 +42,9 @@ namespace DevTrack.BLL
             return new ProjectDashboardData
             {
                 Project = project,
-                Tasks = tasks,
+                Tasks = tasks.Cast<DevTrack.DAL.Models.Task>().ToList(),
                 Milestones = milestones,
-                Documents = documents.Cast<DAL.Models.Document>().ToList()
+                Documents = documents.Cast<DevTrack.DAL.Models.Document>().ToList()
             };
         }
 
@@ -103,4 +107,3 @@ namespace DevTrack.BLL
             return true; // Or false if the name is not unique
         }
     }
-}
