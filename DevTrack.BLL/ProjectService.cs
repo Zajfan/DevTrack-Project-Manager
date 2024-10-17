@@ -1,6 +1,7 @@
 ﻿// ProjectService.cs
 using DevTrack.DAL.Models;
 using DevTrack.DAL.Repositories;
+using Task = DevTrack.DAL.Models.Task;
 
 namespace DevTrack.BLL
 {
@@ -26,7 +27,12 @@ namespace DevTrack.BLL
             // ... initialize other repositories
         }
 
-        public async Task<ProjectDashboardData> GetProjectDashboardDataAsync(int projectId)
+        public TaskRepository GetTaskRepository()
+        {
+            return taskRepository;
+        }
+
+        public async Task<ProjectDashboardData> GetProjectDashboardDataAsync(int projectId, TaskRepository taskRepository)
         {
             var project = await projectRepository.GetProjectByIdAsync(projectId);
             var tasks = await taskRepository.GetTasksByProjectIdAsync(projectId);
