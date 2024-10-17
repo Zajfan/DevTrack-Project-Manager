@@ -1,4 +1,8 @@
 ﻿// MainWindow.xaml.cs
+using DevTrack.BLL;
+using DevTrack.DAL.Models;
+using Microsoft.Maui.Controls;
+using System;
 using System.Collections.ObjectModel;
 
 namespace DevTrack.Views

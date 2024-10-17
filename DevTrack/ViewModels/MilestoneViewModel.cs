@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using DevTrack.BLL;
+using DevTrack.DAL.Models;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace DevTrack.ViewModels
 {
