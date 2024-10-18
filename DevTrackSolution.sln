@@ -5,7 +5,7 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevTrack", "DevTrack\DevTrack.csproj", "{A87E33C9-9116-4B68-A89C-DFD12A08E1A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevTrack.BLL", "DevTrack.BLL\DevTrack.BLL.csproj", "{026A3BC1-CF20-4782-89AA-01E03E6E1553}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevTrack.BLL", "DevTrack.BLL\DevTrack.BLL.csproj", "{026A3BC1-CF20-4782-89AA-01E03E6E1553}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevTrack.DAL", "DevTrack.DAL\DevTrack.DAL.csproj", "{E1262799-CC20-424C-977C-EF01CD7ECF91}"
 EndProject

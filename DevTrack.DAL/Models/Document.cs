@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace DevTrack.DAL.Models
 {
-    internal class Document
+    public class Document
     {
+        public int DocumentID { get; set; }
+        public required string Title { get; set; }
+        public required string Content { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
     }
 }

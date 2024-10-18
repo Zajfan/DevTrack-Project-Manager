@@ -2,13 +2,15 @@ using DevTrack.DAL.Models;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Intrinsics.X86;
 using System.Threading.Tasks;
 
 namespace DevTrack.DAL.Repositories
 {
     public class ProjectRepository : BaseRepository
     {
-        private readonly ProjectMapper projectMapper = new();
+        private readonly ProjectMapper projectMapper = new ProjectMapper();
+        private MySqlConnection connection;
 
         public ProjectRepository(IDbConnectionFactory connectionFactory) : base(connectionFactory)
         {
@@ -16,14 +18,14 @@ namespace DevTrack.DAL.Repositories
 
         public async Task<List<Project>> GetAllProjectsAsync()
         {
-            List<Project> projects = new();
+            var projects = new List<Project>();
 
             try
             {
-                using (MySqlConnection connection = connectionFactory.CreateConnection())
+                using (var connection = connectionFactory.CreateConnection())
                 {
                     string query = "SELECT * FROM projects";
-                    using MySqlCommand command = new(query, connection);
+                    using var command = new MySqlCommand(query, connection);
 
                     await connection.OpenAsync();
                     using var reader = await command.ExecuteReaderAsync();
@@ -49,13 +51,14 @@ namespace DevTrack.DAL.Repositories
 
             try
             {
-                using (MySqlConnection connection = connectionFactory.CreateConnection())
+                using (var connection = connectionFactory.CreateConnection())
                 {
                     string query = "SELECT * FROM projects WHERE ProjectID = @ProjectID";
-                    using MySqlCommand command = new(query, connection);
+                    using var command = new MySqlCommand(query, connection);
                     command.Parameters.AddWithValue("@ProjectID", projectId);
 
                     await connection.OpenAsync();
+
                     using var reader = await command.ExecuteReaderAsync();
 
                     if (await reader.ReadAsync())
@@ -67,9 +70,10 @@ namespace DevTrack.DAL.Repositories
             catch (MySqlException ex)
             {
                 Console.WriteLine($"Error getting project by ID: {ex.Message}");
+                // Consider logging the exception or handling it more gracefully
             }
 
-            return project;
+            return project; // Return the project (or null if not found)
         }
 
         public async Task CreateProjectAsync(Project project)
@@ -150,6 +154,7 @@ namespace DevTrack.DAL.Repositories
                     command.Parameters.AddWithValue("@ProjectID", projectId);
 
                     await connection.OpenAsync();
+
                     await command.ExecuteNonQueryAsync();
                 }
             }
@@ -161,3 +166,4 @@ namespace DevTrack.DAL.Repositories
         }
     }
 }
+Use code with caution.

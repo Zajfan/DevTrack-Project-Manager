@@ -17,16 +17,24 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <AndroidJavaSource Remove="DataTransferObjects\**" />
+	  <AndroidLibrary Remove="DataTransferObjects\**" />
+	  <AndroidNativeLibrary Remove="DataTransferObjects\**" />
+	  <Compile Remove="DataTransferObjects\**" />
+	  <EmbeddedResource Remove="DataTransferObjects\**" />
+	  <JavaSourceJar Remove="DataTransferObjects\**" />
+	  <None Remove="DataTransferObjects\**" />
+	  <ProguardConfiguration Remove="DataTransferObjects\**" />
+	  <TransformFile Remove="DataTransferObjects\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.92" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.92" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\DevTrack.DAL\DevTrack.DAL.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="DataTransferObjects\" />
 	</ItemGroup>
 
 </Project>

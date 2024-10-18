@@ -12,9 +12,9 @@ namespace DevTrack.DAL.Models
 
         [Required(ErrorMessage = "Task Name is required.")]
         [StringLength(255, ErrorMessage = "Task Name cannot exceed 255 characters.")]
-        public string TaskName { get; set; }
+        public required string TaskName { get; set; }
 
-        public string Description { get; set; }
+        public required string Description { get; set; }
 
         [Required(ErrorMessage = "Assigned To is required.")]
         public int AssignedTo { get; set; }
@@ -23,7 +23,7 @@ namespace DevTrack.DAL.Models
 
         [Required(ErrorMessage = "Status is required.")]
         [StringLength(20, ErrorMessage = "Status cannot exceed 20 characters.")]
-        public string Status { get; set; }
+        public required string Status { get; set; }
 
         public int? Priority { get; set; }
 
