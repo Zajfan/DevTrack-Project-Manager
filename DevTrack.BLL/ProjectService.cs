@@ -3,6 +3,9 @@ using DevTrack.DAL.Models;
 using DevTrack.DAL.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using EntityTask = DevTrack.DAL.Models.Task;
 
 namespace DevTrack.BLL
 {
@@ -32,6 +35,7 @@ namespace DevTrack.BLL
 
         public async System.Threading.Tasks.Task<ProjectDashboardData> GetProjectDashboardDataAsync(int projectId)
         {
+            var project = await projectRepository.GetProjectByIdAsync(projectId);
             var tasks = await taskRepository.GetTasksByProjectIdAsync(projectId);
             var milestones = await milestoneRepository.GetAllMilestonesAsync();
             var documents = await documentRepository.GetAllDocumentsAsync();
@@ -39,11 +43,12 @@ namespace DevTrack.BLL
             return new ProjectDashboardData
             {
                 Project = project,
-                Tasks = tasks.Cast<DevTrack.DAL.Models.Task>().ToList(),
+                Tasks = tasks.Cast<DevTrack.DAL.Models.Task>().ToList(), // Explicit cast if needed
                 Milestones = milestones,
-                Documents = documents.Cast<DevTrack.DAL.Models.Document>().ToList()
+                Documents = documents.Cast<DevTrack.DAL.Models.Document>().ToList() // Explicit cast if needed
             };
         }
+
 
         public async System.Threading.Tasks.Task<List<Project>> GetAllProjectsAsync()
         {
