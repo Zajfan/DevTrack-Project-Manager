@@ -27,4 +27,8 @@
 	  <ProjectReference Include="..\DevTrack.DAL\DevTrack.DAL.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="DataTransferObjects\" />
+	</ItemGroup>
+
 </Project>
