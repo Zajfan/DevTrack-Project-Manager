@@ -1,6 +1,7 @@
 ﻿// ProjectService.cs
 using DevTrack.BLL.Models;
 using DevTrack.DAL.Models;
+using EntityTask = DevTrack.DAL.Models.Task;
 using DevTrack.DAL.Repositories;
 using System;
 using System.Collections.Generic;
@@ -8,31 +9,23 @@ using System.Linq;
 
 namespace DevTrack.BLL
 {
-    public class ProjectService
+    public class ProjectService(
+        ProjectRepository projectRepository,
+        TaskRepository taskRepository,
+        MilestoneRepository milestoneRepository,
+        DocumentRepository documentRepository)
     {
-        private readonly ProjectRepository projectRepository;
-        private readonly TaskRepository taskRepository;
-        private readonly MilestoneRepository milestoneRepository;
-        private readonly DocumentRepository documentRepository;
-
-        public ProjectService(
-            ProjectRepository projectRepository,
-            TaskRepository taskRepository,
-            MilestoneRepository milestoneRepository,
-            DocumentRepository documentRepository)
-        {
-            this.projectRepository = projectRepository;
-            this.taskRepository = taskRepository;
-            this.milestoneRepository = milestoneRepository;
-            this.documentRepository = documentRepository;
-        }
-
         public DocumentRepository GetDocumentRepository()
         {
             return documentRepository;
         }
 
-        public async System.Threading.Tasks.Task<ProjectDashboardData> GetProjectDashboardDataAsync(int projectId)
+        public TaskRepository GetTaskRepository()
+        {
+            return taskRepository;
+        }
+
+        public async System.Threading.Tasks.Task<ProjectDashboardData> GetProjectDashboardDataAsync(int projectId, TaskRepository taskRepository)
         {
             var project = await projectRepository.GetProjectByIdAsync(projectId);
             var tasks = await taskRepository.GetTasksByProjectIdAsync(projectId);
@@ -55,7 +48,7 @@ namespace DevTrack.BLL
 
         public async System.Threading.Tasks.Task CreateProjectAsync(Project project)
         {
-            if (IsProjectNameUnique(project.ProjectName))
+            if (ProjectService.IsProjectNameUnique(project.ProjectName))
             {
                 await projectRepository.CreateProjectAsync(project);
             }
@@ -103,7 +96,7 @@ namespace DevTrack.BLL
             }
         }
 
-        private bool IsProjectNameUnique(string projectName)
+        private static bool IsProjectNameUnique(string projectName)
         {
             // ... (Your implementation to check for uniqueness) ...
             return true; // Or false if the name is not unique
