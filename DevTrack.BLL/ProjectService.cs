@@ -1,11 +1,10 @@
 ﻿// ProjectService.cs
+using DevTrack.BLL.Models;
 using DevTrack.DAL.Models;
 using DevTrack.DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using EntityTask = DevTrack.DAL.Models.Task;
 
 namespace DevTrack.BLL
 {
@@ -43,12 +42,11 @@ namespace DevTrack.BLL
             return new ProjectDashboardData
             {
                 Project = project,
-                Tasks = tasks.Cast<DevTrack.DAL.Models.Task>().ToList(), // Explicit cast if needed
+                Tasks = tasks.Cast<DevTrack.DAL.Models.Task>().ToList(),
                 Milestones = milestones,
-                Documents = documents.Cast<DevTrack.DAL.Models.Document>().ToList() // Explicit cast if needed
+                Documents = documents.Cast<DevTrack.DAL.Models.Document>().ToList()
             };
         }
-
 
         public async System.Threading.Tasks.Task<List<Project>> GetAllProjectsAsync()
         {
@@ -76,6 +74,7 @@ namespace DevTrack.BLL
                 {
                     throw new Exception("Project not found.");
                 }
+
                 await projectRepository.UpdateProjectAsync(project);
             }
             catch (Exception ex)
@@ -94,6 +93,7 @@ namespace DevTrack.BLL
                 {
                     throw new Exception("Project not found.");
                 }
+
                 await projectRepository.DeleteProjectAsync(projectId);
             }
             catch (Exception ex)
