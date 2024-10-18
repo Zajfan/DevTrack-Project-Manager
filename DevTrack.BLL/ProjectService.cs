@@ -1,4 +1,10 @@
-﻿namespace DevTrack.BLL
+﻿// ProjectService.cs
+using DevTrack.BLL.Models;
+using DevTrack.DAL.Models;
+using DevTrack.DAL.Repositories;
+using Task = DevTrack.DAL.Models.Task;
+
+namespace DevTrack.BLL
 {
     public class ProjectService
     {
