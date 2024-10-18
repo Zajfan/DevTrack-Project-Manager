@@ -1,14 +1,31 @@
 // ChatHub.cs
-public class ChatHub : Hub
+namespace DevTrack.Hubs
 {
-    public object? Clients { get; private set; }
-
-    public async Task SendMessage(string user, string message)
+    public class ChatHub : Hub
     {
-        object value = await Clients.All.SendAsync("ReceiveMessage", user, message);
-    }
-}
+        public ChatHub(IHubCallerClients clients)
+        {
+            Clients = clients ?? throw new ArgumentNullException(nameof(clients));
+        }
 
-public class Hub
-{
+        public async Task SendMessage(string user, string message)
+        {
+            await Clients.All.SendAsync("ReceiveMessage", user, message);
+        }
+    }
+
+    public class Hub
+    {
+        public required IHubCallerClients Clients { get; set; }
+    }
+
+    public interface IHubCallerClients
+    {
+        IClientProxy All { get; }
+    }
+
+    public interface IClientProxy
+    {
+        Task SendAsync(string method, params object[] args);
+    }
 }

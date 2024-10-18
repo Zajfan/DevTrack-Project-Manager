@@ -2,13 +2,13 @@
 using DevTrack.BLL.Models;
 using DevTrack.DAL.Models;
 using DevTrack.DAL.Repositories;
-using Task = DevTrack.DAL.Models.Task;
+using EntityTask = DevTrack.DAL.Models.Task;
 
 namespace DevTrack.BLL
 {
     public class ProjectService
     {
-        private readonly ProjectRepository projectRepository; // No underscore
+        private readonly ProjectRepository projectRepository;
         private readonly TaskRepository taskRepository;
         private readonly MilestoneRepository milestoneRepository;
         private readonly DocumentRepository documentRepository;
@@ -19,7 +19,7 @@ namespace DevTrack.BLL
             MilestoneRepository milestoneRepository,
             DocumentRepository documentRepository)
         {
-            this.projectRepository = projectRepository; // No underscore
+            this.projectRepository = projectRepository;
             this.taskRepository = taskRepository;
             this.milestoneRepository = milestoneRepository;
             this.documentRepository = documentRepository;
@@ -36,9 +36,9 @@ namespace DevTrack.BLL
             return taskRepository;
         }
 
-        public async System.Threading.Tasks.Task<ProjectDashboardData> GetProjectDashboardDataAsync(int projectId)
+        public async System.Threading.Tasks.EntityTask<ProjectDashboardData> GetProjectDashboardDataAsync(int projectId)
         {
-            var project = await projectRepository.GetProjectByIdAsync(projectId); // No underscore
+            var project = await projectRepository.GetProjectByIdAsync(projectId);
             var tasks = await taskRepository.GetTasksByProjectIdAsync(projectId);
             var milestones = await milestoneRepository.GetAllMilestonesAsync();
             var documents = await documentRepository.GetAllDocumentsAsync();
@@ -54,7 +54,7 @@ namespace DevTrack.BLL
 
         public async System.Threading.Tasks.Task<List<Project>> GetAllProjectsAsync()
         {
-            return await projectRepository.GetAllProjectsAsync(); // No underscore
+            return await projectRepository.GetAllProjectsAsync();
         }
 
         public async System.Threading.Tasks.Task CreateProjectAsync(Project project)
