@@ -1,33 +1,38 @@
-﻿// ProjectService.cs
-using DevTrack.BLL.Models;
-using DevTrack.DAL.Models;
-using EntityTask = DevTrack.DAL.Models.Task;
-using DevTrack.DAL.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace DevTrack.BLL
+﻿namespace DevTrack.BLL
 {
-    public class ProjectService(
-        ProjectRepository projectRepository,
-        TaskRepository taskRepository,
-        MilestoneRepository milestoneRepository,
-        DocumentRepository documentRepository)
+    public class ProjectService
     {
+        private readonly ProjectRepository projectRepository; // No underscore
+        private readonly TaskRepository taskRepository;
+        private readonly MilestoneRepository milestoneRepository;
+        private readonly DocumentRepository documentRepository;
+
+        public ProjectService(
+            ProjectRepository projectRepository,
+            TaskRepository taskRepository,
+            MilestoneRepository milestoneRepository,
+            DocumentRepository documentRepository)
+        {
+            this.projectRepository = projectRepository; // No underscore
+            this.taskRepository = taskRepository;
+            this.milestoneRepository = milestoneRepository;
+            this.documentRepository = documentRepository;
+        }
+
         public DocumentRepository GetDocumentRepository()
         {
             return documentRepository;
         }
 
-        public TaskRepository GetTaskRepository()
+        public
+ TaskRepository GetTaskRepository()
         {
             return taskRepository;
         }
 
-        public async System.Threading.Tasks.Task<ProjectDashboardData> GetProjectDashboardDataAsync(int projectId, TaskRepository taskRepository)
+        public async System.Threading.Tasks.Task<ProjectDashboardData> GetProjectDashboardDataAsync(int projectId)
         {
-            var project = await projectRepository.GetProjectByIdAsync(projectId);
+            var project = await projectRepository.GetProjectByIdAsync(projectId); // No underscore
             var tasks = await taskRepository.GetTasksByProjectIdAsync(projectId);
             var milestones = await milestoneRepository.GetAllMilestonesAsync();
             var documents = await documentRepository.GetAllDocumentsAsync();
@@ -43,12 +48,12 @@ namespace DevTrack.BLL
 
         public async System.Threading.Tasks.Task<List<Project>> GetAllProjectsAsync()
         {
-            return await projectRepository.GetAllProjectsAsync();
+            return await projectRepository.GetAllProjectsAsync(); // No underscore
         }
 
         public async System.Threading.Tasks.Task CreateProjectAsync(Project project)
         {
-            if (ProjectService.IsProjectNameUnique(project.ProjectName))
+            if (IsProjectNameUnique(project.ProjectName))
             {
                 await projectRepository.CreateProjectAsync(project);
             }
@@ -96,7 +101,7 @@ namespace DevTrack.BLL
             }
         }
 
-        private static bool IsProjectNameUnique(string projectName)
+        private bool IsProjectNameUnique(string projectName)
         {
             // ... (Your implementation to check for uniqueness) ...
             return true; // Or false if the name is not unique
